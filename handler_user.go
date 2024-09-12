@@ -38,14 +38,14 @@ func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 	respondWithJSON(w, http.StatusOK, databaseUserToModelUser(user))
 }
 
-func (cfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request) {
+func (cfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
 	apiKey, err := auth.GetAPIKey(r.Header)
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "Couldn't find api key")
 		return
 	}
 
-	user, err := cfg.DB.GetUserByAPIKey(r.Context(), apiKey)
+	user, err = cfg.DB.GetUserByAPIKey(r.Context(), apiKey)
 	if err != nil {
 		respondWithError(w, http.StatusNotFound, "User not found")
 		return
